@@ -28,7 +28,6 @@ public class SceneChanger : MonoBehaviour
     {
         this.sceneIndexToLoad = index;
         this.fadeAnimator.SetTrigger("FadeOut");
-        Debug.Log("trigger set - loading " + index);
     }
 
     public void OnFadeComplete()

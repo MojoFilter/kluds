@@ -686,6 +686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 659283042}
   barrel: {fileID: 399512608}
+  smokeAnimator: {fileID: 1752938673}
 --- !u!1 &1473807364
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ public class Cannon : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject barrel;
+    public Animator smokeAnimator;
 
     // Start is called before the first frame update
     void Start()
@@ -18,5 +19,10 @@ public class Cannon : MonoBehaviour
         var difference = target - this.transform.position;
         var rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
         this.barrel.transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            this.smokeAnimator.SetTrigger("Blast");
+        }
     }
 }

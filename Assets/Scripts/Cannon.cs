@@ -4,6 +4,7 @@ using UnityEngine;
 public class Cannon : MonoBehaviour
 {
     public Camera mainCamera;
+    public GameObject gameboard;
     public GameObject barrel;
     public Animator smokeAnimator;
     public GameObject kludPrefab;
@@ -38,8 +39,12 @@ public class Cannon : MonoBehaviour
     private void FireKlud(Vector2 direction, float rotationZ)
     {
         var klud = Instantiate(this.kludPrefab) as GameObject;
+        klud.transform.parent = this.gameboard.transform;
         klud.transform.position = this.kludStart.transform.position;
+        Debug.Log(klud.transform.position);
+        //klud.transform.position.Set(klud.transform.position.x, klud.transform.position.y, -1);
         //klud.transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+        Debug.Log(klud.transform.position);
         klud.GetComponent<Rigidbody2D>().velocity = direction * this.kludSpeed;
     }
 }

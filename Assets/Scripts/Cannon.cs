@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 public class Cannon : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject barrel;
     public Animator smokeAnimator;
+    public GameObject kludPrefab;
+    public GameObject kludStart;
+
+    public float kludSpeed = 60f;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +28,18 @@ public class Cannon : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             this.smokeAnimator.SetTrigger("Blast");
+            var distance = difference.magnitude;
+            Vector2 direction = difference / distance;
+            direction.Normalize();
+            this.FireKlud(direction, rotationZ);
         }
+    }
+
+    private void FireKlud(Vector2 direction, float rotationZ)
+    {
+        var klud = Instantiate(this.kludPrefab) as GameObject;
+        klud.transform.position = this.kludStart.transform.position;
+        //klud.transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+        klud.GetComponent<Rigidbody2D>().velocity = direction * this.kludSpeed;
     }
 }

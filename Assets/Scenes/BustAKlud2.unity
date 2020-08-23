@@ -235,10 +235,6 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1931273306}
-    - target: {fileID: 7387775513452312021, guid: 7b07883f37720c04891fafbc55584eb7, type: 3}
-      propertyPath: kludSpeed
-      value: 30
-      objectReference: {fileID: 0}
     - target: {fileID: 8852886899081592829, guid: 7b07883f37720c04891fafbc55584eb7, type: 3}
       propertyPath: m_Name
       value: CannonRig

@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 166634930}
   - component: {fileID: 166634932}
   - component: {fileID: 166634931}
+  - component: {fileID: 166634933}
   m_Layer: 0
   m_Name: Crusher
   m_TagString: Untagged
@@ -284,12 +285,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166634929}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 15.173, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 10.843, z: 0}
   m_LocalScale: {x: 2.5333831, y: 2.5333831, z: 2.5333831}
-  m_Children: []
-  m_Father: {fileID: 1199608445}
-  m_RootOrder: 2
+  m_Children:
+  - {fileID: 474041709}
+  m_Father: {fileID: 1879825896}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &166634931
 BoxCollider2D:
@@ -368,6 +370,124 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &166634933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166634929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 462bdf389b56a9140be4d362856b2aac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fallSpeed: 20
+  fallDistance: {x: 0, y: -1}
+  manager: {fileID: 571174353}
+--- !u!1 &474041708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 474041709}
+  m_Layer: 0
+  m_Name: Klud Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &474041709
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474041708}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.26, y: -2.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 166634930}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &571174352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 571174354}
+  - component: {fileID: 571174353}
+  m_Layer: 0
+  m_Name: BustController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &571174353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571174352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305c1935466349142ad0870c861ce600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kludHalfHeight: -0.25
+  kludHalfWidth: 0.2
+  columnCount: 6
+  dropEnabled: 1
+  dropPeriodSeconds: 4
+  crusher: {fileID: 166634933}
+--- !u!4 &571174354
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571174352}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &597288780
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -405,7 +525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4184382862723646160, guid: 7b07883f37720c04891fafbc55584eb7, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4184382862723646160, guid: 7b07883f37720c04891fafbc55584eb7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -427,6 +547,10 @@ PrefabInstance:
       propertyPath: kludSpeed
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 7387775513452312021, guid: 7b07883f37720c04891fafbc55584eb7, type: 3}
+      propertyPath: kludContainer
+      value: 
+      objectReference: {fileID: 474041709}
     - target: {fileID: 8852886899081592829, guid: 7b07883f37720c04891fafbc55584eb7, type: 3}
       propertyPath: m_Name
       value: CannonRig
@@ -547,7 +671,7 @@ Transform:
   - {fileID: 1084005836}
   - {fileID: 98194243}
   m_Father: {fileID: 1879825896}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1879825894
 GameObject:
@@ -628,6 +752,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 166634930}
   - {fileID: 1199608445}
   - {fileID: 1747009454}
   m_Father: {fileID: 0}

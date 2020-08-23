@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 5c24482444415604e8d5a8e88bfc5cd8
   - enabled: 1
-    path: Assets/Scenes/BustAKlud.unity
-    guid: 857ff4252650e9d47b1265ad107e0c92
+    path: Assets/Scenes/BustAKlud2.unity
+    guid: df8adb3ffe8b2d3418c8e260c6346e9d
   m_configObjects: {}

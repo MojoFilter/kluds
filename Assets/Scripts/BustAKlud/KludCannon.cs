@@ -11,6 +11,7 @@ public class KludCannon : MonoBehaviour
     public Animator smokeAnimator;
     public GameObject kludPrefab;
     public GameObject kludStart;
+    public Transform kludContainer;
     public float kludSpeed = 20f;
 
     private KludControls controls;
@@ -55,6 +56,7 @@ public class KludCannon : MonoBehaviour
         direction.Normalize();
 
         var klud = Instantiate(this.kludPrefab) as GameObject;
+        klud.transform.parent = this.kludContainer;
         klud.transform.position = this.kludStart.transform.position;
         klud.GetComponent<Rigidbody2D>().velocity = direction * this.kludSpeed;
         Debug.Log($"direction ({direction}) * speed ({this.kludSpeed}) = {klud.GetComponent<Rigidbody2D>().velocity}");

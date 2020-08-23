@@ -30,7 +30,8 @@ public class Crusher : MonoBehaviour
     {
         collision.rigidbody.velocity = Vector2.zero;
         collision.rigidbody.isKinematic = true;
-        this.manager.Dock(collision.gameObject);
+        var snapOrigin = this.GetComponent<Collider2D>().bounds.ClosestPoint(collision.transform.position);
+        this.manager.Dock(snapOrigin, collision.gameObject);
     }
 
     public void Drop()

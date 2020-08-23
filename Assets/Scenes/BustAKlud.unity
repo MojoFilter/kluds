@@ -123,6 +123,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &25770791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 25770793}
+  - component: {fileID: 25770792}
+  m_Layer: 0
+  m_Name: BustAKludController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &25770792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25770791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 787d2a6e0aa8af74b9e89ab6dab7c15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kludHalfHeight: -0.25
+  kludHalfWidth: 0.2
+  columnCount: 5
+  dropEnabled: 0
+  dropPeriodSeconds: 4
+  crusher: {fileID: 1083721166}
+--- !u!4 &25770793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25770791}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.15615167, y: 0.5530157, z: -2.7077157}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &253093090
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,7 +888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 659283042}
-  kludContainer: {fileID: 1083721162}
+  kludContainer: {fileID: 1942711825}
   barrel: {fileID: 399512608}
   smokeAnimator: {fileID: 1752938673}
   kludPrefab: {fileID: 5929889408246519029, guid: c8297fa70fb7e024f8b1ef0de4cb9ec7, type: 3}
@@ -874,7 +923,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 363.5, z: -1}
   m_LocalScale: {x: 97.8983, y: 73.68135, z: 41.220337}
-  m_Children: []
+  m_Children:
+  - {fileID: 1942711826}
   m_Father: {fileID: 831933461}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -993,6 +1043,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   fallSpeed: 20
   fallDistance: {x: 0, y: -1}
+  manager: {fileID: 25770792}
 --- !u!1 &1473807364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1336,3 +1387,33 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 54.169655, y: 99.678955}
   m_EdgeRadius: 0
+--- !u!1 &1942711825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1942711826}
+  m_Layer: 0
+  m_Name: KludHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1942711826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942711825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.2649, y: -2.5548, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1083721163}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

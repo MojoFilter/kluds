@@ -26,7 +26,7 @@ public class BustAKludController : MonoBehaviour
         
     }
 
-    public void Dock(GameObject klud)
+    public void Dock(Vector3 snapOrigin, GameObject klud)
     {
         var kludTransform = klud.GetComponent<Transform>();
         var pos = kludTransform.localPosition;

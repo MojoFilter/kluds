@@ -58,6 +58,7 @@ public class KludCannon : MonoBehaviour
         var klud = Instantiate(this.kludPrefab) as GameObject;
         klud.transform.parent = this.kludContainer;
         klud.transform.position = this.kludStart.transform.position;
+        klud.transform.localScale = Vector3.one;
         klud.GetComponent<Rigidbody2D>().velocity = direction * this.kludSpeed;
         Debug.Log($"direction ({direction}) * speed ({this.kludSpeed}) = {klud.GetComponent<Rigidbody2D>().velocity}");
     }

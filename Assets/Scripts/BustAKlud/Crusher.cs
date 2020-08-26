@@ -33,7 +33,7 @@ public class Crusher : MonoBehaviour
         collision.rigidbody.isKinematic = true;
         var snapOrigin = this.GetComponent<Collider2D>().bounds.ClosestPoint(collision.transform.position);
         
-        this.manager.Dock(snapOrigin, collision.gameObject);
+        //this.manager.Dock(snapOrigin, collision.gameObject);
     }
 
     public void Drop()

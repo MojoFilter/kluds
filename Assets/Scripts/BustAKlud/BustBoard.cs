@@ -27,12 +27,38 @@ namespace Assets.Scripts.BustAKlud
             var boardPosition = GetClampedPosition(klud.transform.localPosition, this);
             var xOffset = IsShortRow((int)boardPosition.y) ? 0.5f : 0f;
             klud.transform.localPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
+            this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
         }
 
-        public GameObject GetPiece(int line, int index)
+        private void PopMatches(int row, int column)
         {
-            Vector2 worldPoint = this.kludHolder.TransformPoint(line, index, 0);
-            return Physics2D.OverlapPoint(worldPoint, this.kludLayer)?.gameObject;
+            var matches = CollectMatches(row, column, this);
+            Debug.Log($"Matched {matches.Count()}");
+            if (matches.Count() > 2)
+            {
+                Debug.LogError("NOW POP 'EM ALL");
+            }
+        }
+
+
+        private static GameObject GetPiece(int line, int index, BustBoard board)
+        {
+            float indexPosition = index + (IsShortRow(line) ? .5f : 0f);
+            return GetChildren(board.kludHolder.gameObject)
+                     .FirstOrDefault(k => k.transform.localPosition.y == line && k.transform.localPosition.x == indexPosition);
+                     
+            //Vector2 worldPoint = board.kludHolder.TransformPoint(line, indexPosition, 0);
+            //Debug.Log($"Testing position ({index}, {line}) => point ({worldPoint.x}, {worldPoint.y}");
+            //return Physics2D.OverlapPoint(worldPoint, board.kludLayer)?.gameObject;
+            
+        }
+
+        static IEnumerable<GameObject> GetChildren(GameObject obj)
+        {
+            for (int i = 0; i < obj.transform.childCount; ++i)
+            {
+                yield return obj.transform.GetChild(i).gameObject;
+            }
         }
 
         public static Vector3 GetClampedPosition(Vector3 position, BustBoard board)
@@ -52,5 +78,67 @@ namespace Assets.Scripts.BustAKlud
         }
 
         private static bool IsShortRow(int rowIndex) => Math.Abs(rowIndex) % 2 == 1;
+
+        private static readonly Vector2Int[] contactDirections = new[]
+        {
+            (-1, 1),
+            (0, 1),
+            (-1, 0),
+            (1, 0),
+            (-1, -1),
+            (0, -1)
+        }.Select(t => new Vector2Int(t.Item1, t.Item2)).ToArray();
+
+        private static readonly Vector2Int[] shortContactDirections = new[]
+        {
+            (-1, 1),
+            (0, 1),
+            (-1, 0),
+            (1, 0),
+            (-1, -1),
+            (0, -1)
+        }.Select(t => new Vector2Int(t.Item1, t.Item2)).ToArray();
+
+        private static IEnumerable<GameObject> CollectMatches(int row, int col, BustBoard board)
+        {
+            var startKlud = GetPiece(row, col, board);
+            if (startKlud is null)
+            {
+                Debug.LogError($"Start klud not found at ({row}, {col})");
+            }
+
+            var collected = new HashSet<GameObject>();
+            if (startKlud.GetComponent<BustPiece>() is BustPiece piece)
+            {
+                var kludSprite = piece.kludRenderer.sprite;
+                var position = new Vector2Int(col, row);
+                CollectMatches(kludSprite, position, collected, new HashSet<Vector2Int>(), board);
+            }
+            return collected;
+        }
+
+        private static void CollectMatches(Sprite match, Vector2Int position, HashSet<GameObject> collected, HashSet<Vector2Int> visited, BustBoard board)
+        {
+            visited.Add(position);
+            var thisKlud = GetPiece(position.y, position.x, board);
+            if (KludMatches(match, thisKlud))
+            {
+                collected.Add(thisKlud);
+                var directions = IsShortRow(position.y) ? shortContactDirections : contactDirections;
+                var newNeighbors = directions.Select(d => position + d)
+                                             .Where(n => !visited.Contains(n))
+                                             .ToArray();
+
+                foreach (var n in newNeighbors)
+                {
+                    CollectMatches(match, n, collected, visited, board);
+                }
+            }
+        }
+
+        private static bool KludMatches(Sprite sprite, GameObject klud)
+        {
+            return klud?.GetComponent<BustPiece>()?.kludRenderer.sprite?.Equals(sprite) == true;
+        }
     }
 }

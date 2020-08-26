@@ -36,7 +36,10 @@ namespace Assets.Scripts.BustAKlud
             Debug.Log($"Matched {matches.Count()}");
             if (matches.Count() > 2)
             {
-                Debug.LogError("NOW POP 'EM ALL");
+                foreach(var deadKlud in matches)
+                {
+                    deadKlud.GetComponent<BustPiece>().Pop();
+                }
             }
         }
 

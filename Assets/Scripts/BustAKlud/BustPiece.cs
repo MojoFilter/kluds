@@ -9,10 +9,13 @@ namespace Assets.Scripts.BustAKlud
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            var stoppers = new[] { "Klud", "Crusher" };
-            if (stoppers.Contains(collision.gameObject.tag))
+            if (this.GetComponent<Rigidbody2D>()?.velocity != Vector2.zero)
             {
-                FindObjectOfType<BustAKludController>().Dock(this.gameObject);
+                var stoppers = new[] { "Klud", "Crusher" };
+                if (stoppers.Contains(collision.gameObject.tag))
+                {
+                    FindObjectOfType<BustAKludController>().Dock(this.gameObject);
+                }
             }
         }
     }

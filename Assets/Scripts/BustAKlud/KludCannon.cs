@@ -9,7 +9,7 @@ public class KludCannon : MonoBehaviour
     public Camera mainCamera;
     public GameObject barrel;
     public Animator smokeAnimator;
-    public GameObject kludPrefab;
+    public KludProvider kludProvider;
     public GameObject kludStart;
     public Transform kludContainer;
     public float kludSpeed = 20f;
@@ -19,7 +19,6 @@ public class KludCannon : MonoBehaviour
     private void Awake()
     {
         this.controls = new KludControls();
-
         this.controls.Bust.Fire.performed += ctx => this.Fire();
     }
 
@@ -55,7 +54,7 @@ public class KludCannon : MonoBehaviour
         Vector3 direction = difference / distance;
         direction.Normalize();
 
-        var klud = Instantiate(this.kludPrefab) as GameObject;
+        var klud = Instantiate(this.kludProvider.TakePrefab());
         klud.transform.parent = this.kludContainer;
         klud.transform.position = this.kludStart.transform.position;
         klud.transform.localScale = Vector3.one;

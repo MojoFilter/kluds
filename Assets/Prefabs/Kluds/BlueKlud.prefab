@@ -93,9 +93,10 @@ GameObject:
   - component: {fileID: 269996671954829130}
   - component: {fileID: 8928289268950085036}
   - component: {fileID: 8051422220228863603}
+  - component: {fileID: 8946597313258346532}
   m_Layer: 0
   m_Name: BlueKlud
-  m_TagString: Untagged
+  m_TagString: Klud
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,4 +152,16 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0.5, y: -0.5}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.44559306
+--- !u!114 &8946597313258346532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5929889408246519029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5aedecd6df36f9478e0add3b77064f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

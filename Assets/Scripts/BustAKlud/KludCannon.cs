@@ -60,6 +60,6 @@ public class KludCannon : MonoBehaviour
         klud.transform.position = this.kludStart.transform.position;
         klud.transform.localScale = Vector3.one;
         klud.GetComponent<Rigidbody2D>().velocity = direction * this.kludSpeed;
-        Debug.Log($"direction ({direction}) * speed ({this.kludSpeed}) = {klud.GetComponent<Rigidbody2D>().velocity}");
+        //Debug.Log($"direction ({direction}) * speed ({this.kludSpeed}) = {klud.GetComponent<Rigidbody2D>().velocity}");
     }
 }

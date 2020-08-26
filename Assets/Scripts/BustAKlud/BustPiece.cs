@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.BustAKlud
 {
     public class BustPiece : MonoBehaviour
     {
-        public int Line { get; set; }
-
-        // column position
-        public int Index { get; set; }
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            var stoppers = new[] { "Klud", "Crusher" };
+            if (stoppers.Contains(collision.gameObject.tag))
+            {
+                FindObjectOfType<BustAKludController>().Dock(this.gameObject);
+            }
+        }
     }
 }

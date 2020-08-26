@@ -29,11 +29,13 @@ public class Crusher : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        collision.rigidbody.velocity = Vector2.zero;
-        collision.rigidbody.isKinematic = true;
-        var snapOrigin = this.GetComponent<Collider2D>().bounds.ClosestPoint(collision.transform.position);
-        
-        //this.manager.Dock(snapOrigin, collision.gameObject);
+        //collision.rigidbody.velocity = Vector2.zero;
+        //collision.rigidbody.isKinematic = true;
+        //var pos = collision.transform.localPosition;
+        //var row = Mathf.Round(pos.y);
+        //var col = Mathf.Round(pos.x);
+        //collision.transform.localPosition = new Vector3(col, row);
+        ////this.manager.Dock(snapOrigin, collision.gameObject);
     }
 
     public void Drop()

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.BustAKlud
 {
-    public class BustLine : List<BustPiece>
+    public class BustLine : List<GameObject>
     {
         public BustLine(bool isShort)
         {

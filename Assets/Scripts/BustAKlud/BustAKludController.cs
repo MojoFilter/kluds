@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.BustAKlud;
+using System.Collections;
 using UnityEngine;
 
 public class BustAKludController : MonoBehaviour
@@ -11,11 +12,13 @@ public class BustAKludController : MonoBehaviour
     public float dropPeriodSeconds = 4f;
 
     public Crusher crusher;
-    
+
+    public BustBoard board;
+
     // Start is called before the first frame update
     void Start()
     {
-        _board = new GameObject[columnCount, 32];
+        //_board = new GameObject[columnCount, 32];
         this.StartCoroutine(this.DropPeriodically());
     }
 
@@ -25,23 +28,25 @@ public class BustAKludController : MonoBehaviour
         
     }
 
-    public void Dock(Vector3 snapOrigin, GameObject klud)
+    public void Dock(Vector3 snapOrigin, GameObject kludObject)
     {
-        var kludTransform = klud.GetComponent<Transform>();
-        var pos = kludTransform.localPosition;
-        var left = pos.x;
+        this.board.Dock(snapOrigin, kludObject);
+        
+        //var kludTransform = klud.GetComponent<Transform>();
+        //var pos = kludTransform.localPosition;
+        //var left = pos.x;
 
-        // round to nearest width
-        var roundFactor = 1f / kludHalfWidth;
-        left -= kludHalfWidth;
-        left = Mathf.Round(left * roundFactor) / roundFactor;
-        left += kludHalfWidth;
-        left = Mathf.Clamp(left, kludHalfWidth, kludHalfWidth * 2f * columnCount + kludHalfWidth);
-        Debug.Log($"Shifted from {pos.x} to {left} ({roundFactor})");
-        kludTransform.localPosition = new Vector3(left, kludHalfHeight, pos.z);
+        //// round to nearest width
+        //var roundFactor = 1f / kludHalfWidth;
+        //left -= kludHalfWidth;
+        //left = Mathf.Round(left * roundFactor) / roundFactor;
+        //left += kludHalfWidth;
+        //left = Mathf.Clamp(left, kludHalfWidth, kludHalfWidth * 2f * columnCount + kludHalfWidth);
+        //Debug.Log($"Shifted from {pos.x} to {left} ({roundFactor})");
+        //kludTransform.localPosition = new Vector3(left, kludHalfHeight, pos.z);
     }
 
-    private GameObject[,] _board;
+    //private GameObject[,] _board;
 
     private IEnumerator DropPeriodically()
     {

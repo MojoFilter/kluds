@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.BustAKlud;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ public class Crusher : MonoBehaviour
         collision.rigidbody.velocity = Vector2.zero;
         collision.rigidbody.isKinematic = true;
         var snapOrigin = this.GetComponent<Collider2D>().bounds.ClosestPoint(collision.transform.position);
+        
         this.manager.Dock(snapOrigin, collision.gameObject);
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.BustAKlud
 {
@@ -28,18 +29,36 @@ namespace Assets.Scripts.BustAKlud
             var xOffset = IsShortRow((int)boardPosition.y) ? 0.5f : 0f;
             klud.transform.localPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
             this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
+            this.DropUnmoored();
         }
 
         private void PopMatches(int row, int column)
         {
             var matches = CollectMatches(row, column, this);
-            Debug.Log($"Matched {matches.Count()}");
+            //Debug.Log($"Matched {matches.Count()}");
             if (matches.Count() > 2)
             {
                 foreach(var deadKlud in matches)
                 {
+                    deadKlud.transform.SetParent(this.transform);
                     deadKlud.GetComponent<BustPiece>().Pop();
                 }
+            }
+        }
+
+        private void DropUnmoored()
+        {
+            var anchored = CollectAnchored(this);
+            var allChildren = GetChildren(this.kludHolder.gameObject);
+            var orphaned = allChildren.Where(c => !anchored.Contains(c));
+            Debug.LogWarning($"Children: {allChildren.Count()}  Orphans: {orphaned.Count()}");
+            foreach (var orphan in orphaned)
+            {
+                var body = orphan.GetComponent<Rigidbody2D>();
+                body.isKinematic = false;
+                body.gravityScale = 1f;
+                body.AddForce(new Vector2(Random.Range(-10f, 10f), Random.Range(10f, 100f)));
+                Destroy(orphan, 4f);
             }
         }
 
@@ -115,16 +134,27 @@ namespace Assets.Scripts.BustAKlud
             {
                 var kludSprite = piece.kludRenderer.sprite;
                 var position = new Vector2Int(col, row);
-                CollectMatches(kludSprite, position, collected, new HashSet<Vector2Int>(), board);
+                Collect(position, collected, new HashSet<Vector2Int>(), o => KludMatches(kludSprite, o), board);
             }
             return collected;
         }
 
-        private static void CollectMatches(Sprite match, Vector2Int position, HashSet<GameObject> collected, HashSet<Vector2Int> visited, BustBoard board)
+        private static HashSet<GameObject> CollectAnchored(BustBoard board)
+        {
+            var collected = new HashSet<GameObject>();
+            var visited = new HashSet<Vector2Int>();
+            for (int i = 0; i < board.longRowWidth; ++i)
+            {
+                Collect(new Vector2Int(i, 0), collected, visited, o => o != null, board);
+            }
+            return collected;
+        }
+
+        private static void Collect(Vector2Int position, HashSet<GameObject> collected, HashSet<Vector2Int> visited, Predicate<GameObject> pred, BustBoard board)
         {
             visited.Add(position);
             var thisKlud = GetPiece(position.y, position.x, board);
-            if (KludMatches(match, thisKlud))
+            if (pred(thisKlud))
             {
                 collected.Add(thisKlud);
                 var directions = IsShortRow(position.y) ? shortContactDirections : contactDirections;
@@ -134,7 +164,7 @@ namespace Assets.Scripts.BustAKlud
 
                 foreach (var n in newNeighbors)
                 {
-                    CollectMatches(match, n, collected, visited, board);
+                    Collect(n, collected, visited, pred, board);
                 }
             }
         }

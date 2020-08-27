@@ -9,8 +9,7 @@ namespace Assets.Scripts.BustAKlud
 
         public void Pop()
         {
-            //var body = this.GetComponent<Rigidbody2D>();
-            Destroy(this.gameObject);
+            this.GetComponent<Animator>().SetTrigger("Explode");
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

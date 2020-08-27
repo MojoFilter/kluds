@@ -57,7 +57,11 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: bc177ce20c3f87147810ff94fcb3ae73, type: 3}
     - target: {fileID: 5929889408246519029, guid: c8297fa70fb7e024f8b1ef0de4cb9ec7, type: 3}
       propertyPath: m_Name
-      value: OrangeKlud
+      value: OrangeKlud Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8288864381011372830, guid: c8297fa70fb7e024f8b1ef0de4cb9ec7, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5648cc2ef8380c04f8d3dd3c87bd049f, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8297fa70fb7e024f8b1ef0de4cb9ec7, type: 3}

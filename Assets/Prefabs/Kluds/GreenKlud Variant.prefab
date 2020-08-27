@@ -13,8 +13,12 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 779af96a7713235469898e174e8a1d4e, type: 3}
     - target: {fileID: 2117486918520918887, guid: 5cca065edf8564341887500158dbf203, type: 3}
       propertyPath: m_Name
-      value: GreenKlud
+      value: GreenKlud Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4336429747959065740, guid: 5cca065edf8564341887500158dbf203, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b547561720135b84b88a795dc8eae221, type: 3}
     - target: {fileID: 5518837363079182552, guid: 5cca065edf8564341887500158dbf203, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

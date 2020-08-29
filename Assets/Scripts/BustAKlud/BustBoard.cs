@@ -27,12 +27,17 @@ namespace Assets.Scripts.BustAKlud
             kludBody.velocity = Vector2.zero;
             var boardPosition = GetClampedPosition(klud.transform.localPosition, this);
             var xOffset = IsShortRow((int)boardPosition.y) ? 0.5f : 0f;
-            klud.transform.localPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
-            this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
-            this.DropUnmoored();
+            var dockedPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
+            Debug.LogError($"({klud.transform.localPosition.x}, {klud.transform.localPosition.y}) => [{boardPosition.x}, {boardPosition.y}] ({dockedPosition.x}, {dockedPosition.y})");
+            klud.transform.localPosition = dockedPosition;
+            var lostKluds = this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
+            if (lostKluds.Any())
+            {
+                this.DropUnmoored(lostKluds);
+            }
         }
 
-        private void PopMatches(int row, int column)
+        private IEnumerable<GameObject> PopMatches(int row, int column)
         {
             var matches = CollectMatches(row, column, this);
             //Debug.Log($"Matched {matches.Count()}");
@@ -43,22 +48,31 @@ namespace Assets.Scripts.BustAKlud
                     deadKlud.transform.SetParent(this.transform);
                     deadKlud.GetComponent<BustPiece>().Pop();
                 }
+                return matches;
             }
+            return Enumerable.Empty<GameObject>();
         }
 
-        private void DropUnmoored()
+        private void DropUnmoored(IEnumerable<GameObject> poppedKluds)
         {
-            var anchored = CollectAnchored(this);
+            var anchored = CollectAnchored(this, poppedKluds);
             var allChildren = GetChildren(this.kludHolder.gameObject);
             var orphaned = allChildren.Where(c => !anchored.Contains(c));
             Debug.LogWarning($"Children: {allChildren.Count()}  Orphans: {orphaned.Count()}");
+            foreach (var stable in anchored)
+            {
+                var klud = stable.GetComponent<BustPiece>();
+                klud.SetMooring(true);
+            }
             foreach (var orphan in orphaned)
             {
-                var body = orphan.GetComponent<Rigidbody2D>();
-                body.isKinematic = false;
-                body.gravityScale = 1f;
-                body.AddForce(new Vector2(Random.Range(-10f, 10f), Random.Range(10f, 100f)));
-                Destroy(orphan, 4f);
+                var klud = orphan.GetComponent<BustPiece>();
+                klud.SetMooring(false);
+                //var body = orphan.GetComponent<Rigidbody2D>();
+                //body.isKinematic = false;
+                //body.gravityScale = 1f;
+                //body.AddForce(new Vector2(Random.Range(-10f, 10f), Random.Range(10f, 100f)));
+                //Destroy(orphan, 4f);
             }
         }
 
@@ -93,11 +107,11 @@ namespace Assets.Scripts.BustAKlud
             return new Vector3(x, y, 0);
         }
 
-        public static Vector2Int GetLineAndPosition(Vector3 worldPosition, BustBoard board)
-        {
-            var pos = GetClampedPosition(worldPosition, board);
-            return new Vector2Int(Mathf.Abs((int)pos.x), Mathf.Clamp(Mathf.Abs(Mathf.FloorToInt(pos.y)), 0, board.maxLines - 1));
-        }
+        //public static Vector2Int GetLineAndPosition(Vector3 worldPosition, BustBoard board)
+        //{
+        //    var pos = GetClampedPosition(worldPosition, board);
+        //    return new Vector2Int(Mathf.Abs((int)pos.x), Mathf.Clamp(Mathf.Abs(Mathf.FloorToInt(pos.y)), 0, board.maxLines - 1));
+        //}
 
         private static bool IsShortRow(int rowIndex) => Math.Abs(rowIndex) % 2 == 1;
 
@@ -139,13 +153,13 @@ namespace Assets.Scripts.BustAKlud
             return collected;
         }
 
-        private static HashSet<GameObject> CollectAnchored(BustBoard board)
+        private static HashSet<GameObject> CollectAnchored(BustBoard board, IEnumerable<GameObject> poppedKluds)
         {
             var collected = new HashSet<GameObject>();
             var visited = new HashSet<Vector2Int>();
             for (int i = 0; i < board.longRowWidth; ++i)
             {
-                Collect(new Vector2Int(i, 0), collected, visited, o => o != null, board);
+                Collect(new Vector2Int(i, 0), collected, visited, o => o != null && !poppedKluds.Contains(o), board);
             }
             return collected;
         }

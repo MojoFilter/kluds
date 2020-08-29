@@ -15,6 +15,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenKlud Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3675310062187913142, guid: 5cca065edf8564341887500158dbf203, type: 3}
+      propertyPath: color.r
+      value: 0.20000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 3675310062187913142, guid: 5cca065edf8564341887500158dbf203, type: 3}
+      propertyPath: color.g
+      value: 0.47058827
+      objectReference: {fileID: 0}
+    - target: {fileID: 3675310062187913142, guid: 5cca065edf8564341887500158dbf203, type: 3}
+      propertyPath: color.b
+      value: 0.11764707
+      objectReference: {fileID: 0}
     - target: {fileID: 4336429747959065740, guid: 5cca065edf8564341887500158dbf203, type: 3}
       propertyPath: m_Sprite
       value: 

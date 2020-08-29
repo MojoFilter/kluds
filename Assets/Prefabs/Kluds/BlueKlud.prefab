@@ -168,6 +168,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kludRenderer: {fileID: 5535717361490783700}
+  color: {r: 0.019607844, g: 0.10588236, b: 0.41960788, a: 1}
+  anchoredSprite: {fileID: 21300000, guid: c68fcebecf1b9614d972eb84b63653f7, type: 3}
+  unmooredSprite: {fileID: 21300000, guid: 3f03f867148a45d42bf33e1623707d31, type: 3}
 --- !u!95 &7768412257645085280
 Animator:
   serializedVersion: 3

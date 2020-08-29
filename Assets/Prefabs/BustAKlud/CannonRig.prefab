@@ -346,7 +346,8 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   barrel: {fileID: 5830224945887759451}
   smokeAnimator: {fileID: 7334999496508040708}
-  kludPrefab: {fileID: 5929889408246519029, guid: c8297fa70fb7e024f8b1ef0de4cb9ec7, type: 3}
+  kludProvider: {fileID: 0}
   kludStart: {fileID: 5511503662554671788}
   kludContainer: {fileID: 0}
+  cannonSprite: {fileID: 5755402540532509419}
   kludSpeed: 40

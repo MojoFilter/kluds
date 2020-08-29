@@ -19,7 +19,7 @@ public class BustAKludController : MonoBehaviour
     void Start()
     {
         //_board = new GameObject[columnCount, 32];
-        this.StartCoroutine(this.DropPeriodically());
+        //this.StartCoroutine(this.DropPeriodically());
     }
 
     // Update is called once per frame

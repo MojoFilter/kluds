@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.BustAKlud;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,9 +13,20 @@ public class KludCannon : MonoBehaviour
     public KludProvider kludProvider;
     public GameObject kludStart;
     public Transform kludContainer;
+    public SpriteRenderer cannonSprite;
+
     public float kludSpeed = 20f;
 
     private KludControls controls;
+
+    public void OnKludLoaded(GameObject newKlud)
+    {
+        if (newKlud.GetComponent<BustPiece>() is BustPiece piece)
+        {
+            Debug.Log($"Loaded {piece.color}");
+            this.cannonSprite.color = piece.color;
+        }
+    }
 
     private void Awake()
     {

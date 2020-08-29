@@ -20,21 +20,44 @@ namespace Assets.Scripts.BustAKlud
             
         }
 
-        public void Dock(GameObject klud)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="klud"></param>
+        /// <param name="contactPoint">
+        ///   Relative to the klud center
+        /// </param>
+        public void Dock(GameObject klud, Vector2 contactPoint)
         {
-            var kludBody = klud.GetComponent<Rigidbody2D>();
-            kludBody.isKinematic = true;
-            kludBody.velocity = Vector2.zero;
-            var boardPosition = GetClampedPosition(klud.transform.localPosition, this);
-            var xOffset = IsShortRow((int)boardPosition.y) ? 0.5f : 0f;
-            var dockedPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
-            Debug.LogError($"({klud.transform.localPosition.x}, {klud.transform.localPosition.y}) => [{boardPosition.x}, {boardPosition.y}] ({dockedPosition.x}, {dockedPosition.y})");
-            klud.transform.localPosition = dockedPosition;
-            var lostKluds = this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
-            if (lostKluds.Any())
-            {
-                this.DropUnmoored(lostKluds);
-            }
+            //var rads = Mathf.Atan2(contactPoint.y, contactPoint.x);
+            //Debug.Log($"Hit at {rads * Mathf.Rad2Deg}° {contactPoint}");
+
+            //var testPoints = new []
+            //{
+            //    (.5f, 0f),
+            //    (.5f, .5f),
+            //    (0f, .5f),
+            //    (-.5f, .5f),
+            //    (-.5f, 0f),
+            //    (-.5f, -.5f),
+            //    (0f, -.5f),
+            //    (.5f, -.5f)
+            //};
+            //var result = string.Join(Environment.NewLine, testPoints.Select(p => $"({p.Item1}, {p.Item2}) => {Mathf.Atan2(p.Item2, p.Item1) * Mathf.Rad2Deg}"));
+            //Debug.LogWarning(result);
+            //var kludBody = klud.GetComponent<Rigidbody2D>();
+            //kludBody.isKinematic = true;
+            //kludBody.velocity = Vector2.zero;
+            //var boardPosition = GetClampedPosition(klud.transform.localPosition, this);
+            //var xOffset = IsShortRow((int)boardPosition.y) ? 0.5f : 0f;
+            //var dockedPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
+            //Debug.LogError($"({klud.transform.localPosition.x}, {klud.transform.localPosition.y}) => [{boardPosition.x}, {boardPosition.y}] ({dockedPosition.x}, {dockedPosition.y})");
+            //klud.transform.localPosition = dockedPosition;
+            //var lostKluds = this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
+            //if (lostKluds.Any())
+            //{
+            //    this.DropUnmoored(lostKluds);
+            //}
         }
 
         private IEnumerable<GameObject> PopMatches(int row, int column)

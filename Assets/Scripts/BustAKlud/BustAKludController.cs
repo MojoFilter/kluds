@@ -28,9 +28,9 @@ public class BustAKludController : MonoBehaviour
         
     }
 
-    public void Dock(GameObject klud)
+    public void Dock(GameObject klud, Vector2 contactPoint)
     {
-        this.board.Dock(klud);
+        this.board.Dock(klud, contactPoint);
     }
 
 

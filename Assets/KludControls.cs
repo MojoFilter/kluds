@@ -59,6 +59,52 @@ public class @KludControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Test"",
+            ""id"": ""6bd07986-1c34-49da-8f33-f66985d6ae24"",
+            ""actions"": [
+                {
+                    ""name"": ""Position"",
+                    ""type"": ""Value"",
+                    ""id"": ""9980a3a1-61b8-4c9f-957a-ed21bae18d3d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Drag"",
+                    ""type"": ""Button"",
+                    ""id"": ""207cef7b-da07-494f-8d5b-9cd1eddacfc7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3cec0089-8ad1-4029-ab03-900425cb6bac"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Position"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""81078b0b-2536-480f-ae35-f06a1f47bfcd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -67,6 +113,10 @@ public class @KludControls : IInputActionCollection, IDisposable
         m_Bust = asset.FindActionMap("Bust", throwIfNotFound: true);
         m_Bust_Fire = m_Bust.FindAction("Fire", throwIfNotFound: true);
         m_Bust_Point = m_Bust.FindAction("Point", throwIfNotFound: true);
+        // Test
+        m_Test = asset.FindActionMap("Test", throwIfNotFound: true);
+        m_Test_Position = m_Test.FindAction("Position", throwIfNotFound: true);
+        m_Test_Drag = m_Test.FindAction("Drag", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -153,9 +203,55 @@ public class @KludControls : IInputActionCollection, IDisposable
         }
     }
     public BustActions @Bust => new BustActions(this);
+
+    // Test
+    private readonly InputActionMap m_Test;
+    private ITestActions m_TestActionsCallbackInterface;
+    private readonly InputAction m_Test_Position;
+    private readonly InputAction m_Test_Drag;
+    public struct TestActions
+    {
+        private @KludControls m_Wrapper;
+        public TestActions(@KludControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Position => m_Wrapper.m_Test_Position;
+        public InputAction @Drag => m_Wrapper.m_Test_Drag;
+        public InputActionMap Get() { return m_Wrapper.m_Test; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TestActions set) { return set.Get(); }
+        public void SetCallbacks(ITestActions instance)
+        {
+            if (m_Wrapper.m_TestActionsCallbackInterface != null)
+            {
+                @Position.started -= m_Wrapper.m_TestActionsCallbackInterface.OnPosition;
+                @Position.performed -= m_Wrapper.m_TestActionsCallbackInterface.OnPosition;
+                @Position.canceled -= m_Wrapper.m_TestActionsCallbackInterface.OnPosition;
+                @Drag.started -= m_Wrapper.m_TestActionsCallbackInterface.OnDrag;
+                @Drag.performed -= m_Wrapper.m_TestActionsCallbackInterface.OnDrag;
+                @Drag.canceled -= m_Wrapper.m_TestActionsCallbackInterface.OnDrag;
+            }
+            m_Wrapper.m_TestActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Position.started += instance.OnPosition;
+                @Position.performed += instance.OnPosition;
+                @Position.canceled += instance.OnPosition;
+                @Drag.started += instance.OnDrag;
+                @Drag.performed += instance.OnDrag;
+                @Drag.canceled += instance.OnDrag;
+            }
+        }
+    }
+    public TestActions @Test => new TestActions(this);
     public interface IBustActions
     {
         void OnFire(InputAction.CallbackContext context);
         void OnPoint(InputAction.CallbackContext context);
+    }
+    public interface ITestActions
+    {
+        void OnPosition(InputAction.CallbackContext context);
+        void OnDrag(InputAction.CallbackContext context);
     }
 }

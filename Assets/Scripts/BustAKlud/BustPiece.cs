@@ -49,26 +49,31 @@ namespace Assets.Scripts.BustAKlud
             if (body.velocity != Vector2.zero)
             {
                 var stoppers = new[] { "Klud", "Crusher" };
-                if (stoppers.Contains(collision.gameObject.tag))
+                if (stoppers.Contains(collision.gameObject.tag)
+                    && collision.otherCollider.gameObject.GetComponent<KludSector>() is KludSector sector)
                 {
-                    body.isKinematic = true;
                     body.velocity = Vector2.zero;
-                    var y = Mathf.Round(this.transform.localPosition.y);
-                    var xOffset = ((int)Mathf.Abs(y) % 2 == 1) ? 0f : .5f;
-                    var x = Mathf.Round(this.transform.localPosition.x + xOffset) - xOffset;
-                    this.transform.localPosition = new Vector3(x, y);
+                    body.isKinematic = true;
+                    var otherPos = collision.transform.localPosition;
+                    this.transform.localPosition = otherPos + sector.offset;
+                    //body.isKinematic = true;
+                    //body.velocity = Vector2.zero;
+                    //var y = Mathf.Round(this.transform.localPosition.y);
+                    //var xOffset = ((int)Mathf.Abs(y) % 2 == 1) ? 0f : .5f;
+                    //var x = Mathf.Round(this.transform.localPosition.x + xOffset) - xOffset;
+                    //this.transform.localPosition = new Vector3(x, y);
 
-                    var contacts = new List<ContactPoint2D>();
-                    collision.GetContacts(contacts);
-                    var contactWorldPoint = contacts.Select(c => c.point).OrderBy(p => p.y).First();
-                    var contactPoint = this.transform.InverseTransformPoint(contactWorldPoint);
-                    //var relativeContactPoint = contactPoint - new Vector3(.5f, -.5f);
-                    var hitRads = Mathf.Atan2(contactPoint.y, contactPoint.x);
-                    var sector = Mathf.FloorToInt((hitRads + (segmentLength / 2f)) / segmentLength);
-                    Debug.LogWarning($"Hit in sector {sector} from {hitRads}");
-                    Vector3 dock = collision.transform.localPosition + (Vector3)segmentOffsets[sector];
-                    this.transform.localPosition = dock;
-                    Debug.Log($"Hit {collision.gameObject.name} at ({collision.transform.localPosition}) and docked at {transform.localPosition}");
+                    //var contacts = new List<ContactPoint2D>();
+                    //collision.GetContacts(contacts);
+                    //var contactWorldPoint = contacts.Select(c => c.point).OrderBy(p => p.y).First();
+                    //var contactPoint = this.transform.InverseTransformPoint(contactWorldPoint);
+                    ////var relativeContactPoint = contactPoint - new Vector3(.5f, -.5f);
+                    //var hitRads = Mathf.Atan2(contactPoint.y, contactPoint.x);
+                    //var sector = Mathf.FloorToInt((hitRads + (segmentLength / 2f)) / segmentLength);
+                    //Debug.LogWarning($"Hit in sector {sector} from {hitRads}");
+                    //Vector3 dock = collision.transform.localPosition + (Vector3)segmentOffsets[sector];
+                    //this.transform.localPosition = dock;
+                    //Debug.Log($"Hit {collision.gameObject.name} at ({collision.transform.localPosition}) and docked at {transform.localPosition}");
                     //var hitAnchor = AnchorOf(collision);
                     //var dockPoint = hitAnchor + segmentOffsets[sector];
                     //Debug.LogError($"{hitAnchor} + {segmentOffsets[sector]}");

@@ -23,7 +23,6 @@ public class KludCannon : MonoBehaviour
     {
         if (newKlud.GetComponent<BustPiece>() is BustPiece piece)
         {
-            Debug.Log($"Loaded {piece.color}");
             this.cannonSprite.color = piece.color;
         }
     }

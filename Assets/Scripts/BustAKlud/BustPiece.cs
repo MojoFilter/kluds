@@ -12,6 +12,8 @@ namespace Assets.Scripts.BustAKlud
         public Sprite anchoredSprite;
         public Sprite unmooredSprite;
 
+        private bool _docked = false;
+
         public void Pop()
         {
             this.GetComponent<Animator>().SetTrigger("Explode");
@@ -45,17 +47,28 @@ namespace Assets.Scripts.BustAKlud
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            var body = this.GetComponent<Rigidbody2D>();
-            if (body.velocity != Vector2.zero)
+            if (!_docked)
             {
-                var stoppers = new[] { "Klud", "Crusher" };
-                if (stoppers.Contains(collision.gameObject.tag)
-                    && collision.otherCollider.gameObject.GetComponent<KludSector>() is KludSector sector)
+                if (collision.gameObject.CompareTag("Crusher"))
                 {
+                    _docked = true;
+                    var x = Mathf.Round(this.transform.localPosition.x);
+                    var body = this.GetComponent<Rigidbody2D>();
+                    body.velocity = Vector2.zero;
+                    body.isKinematic = true;
+                    this.transform.localPosition = new Vector3(x, 0f);
+                }
+                else if (collision.gameObject.CompareTag("Klud")
+                         && collision.otherCollider.gameObject.GetComponent<KludSector>() is KludSector sector)
+                {
+                    Debug.Log($"Hit {collision.gameObject.name} on {sector.name}");
+                    _docked = true;
+                    var body = this.GetComponent<Rigidbody2D>();
                     body.velocity = Vector2.zero;
                     body.isKinematic = true;
                     var otherPos = collision.transform.localPosition;
                     this.transform.localPosition = otherPos + sector.offset;
+                    Debug.Log($"Positioning on {otherPos} by {sector.offset} => {transform.localPosition}");
                     //body.isKinematic = true;
                     //body.velocity = Vector2.zero;
                     //var y = Mathf.Round(this.transform.localPosition.y);

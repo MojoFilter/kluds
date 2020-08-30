@@ -145,6 +145,7 @@ namespace Assets.Scripts.BustAKlud
                 Debug.LogError($"Got a {snap.name}");
                 _body.velocity = Vector2.zero;
                 _body.isKinematic = true;
+                _body.position = snap.transform.position;
                 _docked = true;
             }
             else

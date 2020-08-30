@@ -9,10 +9,18 @@ namespace Assets.Scripts.BustAKlud
     {
         public SpriteRenderer kludRenderer;
         public Color color;
-        public Sprite anchoredSprite;
-        public Sprite unmooredSprite;
+        public GameObject marker1Prefab;
+        public GameObject marker2Prefab;
+
+        public LayerMask gridLayerMask;
 
         private bool _docked = false;
+        private Rigidbody2D _body;
+
+        private void Awake()
+        {
+            _body = this.GetComponent<Rigidbody2D>();
+        }
 
         public void Pop()
         {
@@ -21,10 +29,17 @@ namespace Assets.Scripts.BustAKlud
 
         public void SetMooring(bool moored)
         {
-            this.kludRenderer.sprite = moored ? anchoredSprite : unmooredSprite;
+            if (!moored)
+            {
+                _body.isKinematic = false;
+                _body.gravityScale = 1f;
+                _body.AddForce(new Vector2(Random.Range(-20f, 20f), Random.Range(10f, 500f)));
+                this.transform.Find("Sectors").gameObject.SetActive(false);
+                Destroy(this, 4f);
+            }
         }
 
-                    const float segmentLength = Mathf.PI * 2f / 6f;
+        const float segmentLength = Mathf.PI * 2f / 6f;
         string[] segmentNames = new[]
         {
             "Upper-right",
@@ -39,10 +54,10 @@ namespace Assets.Scripts.BustAKlud
         {
             (-.5f, -1f),
             (.5f, -1f),
-            (.5f, 0f),
+            (1f, 0f),
             (.5f, .5f),
             (-.5f, .5f),
-            (-.5f, 0f)
+            (-1f, 0f)
         }.Select(i => new Vector2(i.Item1, i.Item2)).ToArray();
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -51,12 +66,13 @@ namespace Assets.Scripts.BustAKlud
             {
                 if (collision.gameObject.CompareTag("Crusher"))
                 {
-                    _docked = true;
-                    var x = Mathf.Round(this.transform.localPosition.x);
-                    var body = this.GetComponent<Rigidbody2D>();
-                    body.velocity = Vector2.zero;
-                    body.isKinematic = true;
-                    this.transform.localPosition = new Vector3(x, 0f);
+                    this.SnapToGrid();
+                    //_docked = true;
+                    //var x = Mathf.Round(this.transform.localPosition.x);
+                    //var body = this.GetComponent<Rigidbody2D>();
+                    //body.velocity = Vector2.zero;
+                    //body.isKinematic = true;
+                    //this.transform.localPosition = new Vector3(x, 0f);
                 }
                 else if (collision.gameObject.CompareTag("Klud")
                          && collision.otherCollider.gameObject.GetComponent<KludSector>() is KludSector sector)
@@ -94,7 +110,7 @@ namespace Assets.Scripts.BustAKlud
                     //this.transform.localPosition = dockPoint;
                     //Debug.LogError($"({hitRads} + ({segmentLength} / 2f)) / {segmentLength}");
                     //Debug.LogWarning($"{contactPoint} :: {relativeContactPoint} -- Sector #{sector} [{segmentNames[sector]}]");
-                    //FindObjectOfType<BustAKludController>().Dock(this.gameObject, relativeContactPoint);
+                    FindObjectOfType<BustAKludController>().Dock(this.gameObject);
                 }
             }
         }
@@ -109,6 +125,32 @@ namespace Assets.Scripts.BustAKlud
             Debug.LogWarning($"hitpoint {hitPoint}");
             var xroot = Mathf.Round(hitPoint.x + 0.5f) - 0.5f;
             return new Vector2(xroot, 0f);
+        }
+
+        private void SnapToGrid()
+        {
+            var center = transform.Find("KludCenter");
+            //var snapOrigin = this.transform.localPosition;// + new Vector3(.5f, -.5f);
+            //var worldOrigin = this.transform.TransformPoint(snapOrigin);
+            //Debug.Log($"Local {snapOrigin} World {worldOrigin} [{this.transform.localPosition}]");
+            //var marker = Instantiate(marker1Prefab);
+            //marker.transform.position = worldOrigin;
+
+            //marker = Instantiate(marker2Prefab);
+            //marker.transform.position = center.transform.position;
+
+            var snap = Physics2D.OverlapPoint(center.transform.position, this.gridLayerMask);
+            if (snap != null)
+            {
+                Debug.LogError($"Got a {snap.name}");
+                _body.velocity = Vector2.zero;
+                _body.isKinematic = true;
+                _docked = true;
+            }
+            else
+            {
+                Debug.LogError("Didn't find shit");
+            }
         }
     }
 }

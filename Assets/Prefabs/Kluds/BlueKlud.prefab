@@ -41,7 +41,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 1429981138748803626}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f86bbf4068faa5244abf2a29c119fc92, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -280,7 +280,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 3720480205942960531}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f86bbf4068faa5244abf2a29c119fc92, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -355,7 +355,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 5099358753944575553}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f86bbf4068faa5244abf2a29c119fc92, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -424,6 +424,7 @@ Transform:
   - {fileID: 1851162345763429562}
   - {fileID: 2625899968392373693}
   - {fileID: 8646002180240773439}
+  - {fileID: 8989017103018724601}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -478,8 +479,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kludRenderer: {fileID: 5535717361490783700}
   color: {r: 0.019607844, g: 0.10588236, b: 0.41960788, a: 1}
-  anchoredSprite: {fileID: 21300000, guid: c68fcebecf1b9614d972eb84b63653f7, type: 3}
-  unmooredSprite: {fileID: 21300000, guid: 3f03f867148a45d42bf33e1623707d31, type: 3}
+  marker1Prefab: {fileID: 1390371653539532161, guid: 30fbe77707c081a49a3ed9b6a0a18f42, type: 3}
+  marker2Prefab: {fileID: 1991783721855554597, guid: 8203e8d9de27de945a11a3a6c7a68560, type: 3}
+  gridLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!95 &7768412257645085280
 Animator:
   serializedVersion: 3
@@ -499,6 +503,36 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &5934587372217287752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8989017103018724601}
+  m_Layer: 0
+  m_Name: KludCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8989017103018724601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934587372217287752}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 269996671954829130}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6775835829622396056
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,7 +574,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 6775835829622396056}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f86bbf4068faa5244abf2a29c119fc92, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -599,7 +633,7 @@ Transform:
   m_GameObject: {fileID: 6925656240037995527}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1741, y: 1.1741, z: 1.1741}
   m_Children:
   - {fileID: 4814295063572421629}
   - {fileID: 6083869992442395165}
@@ -651,7 +685,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 7261504363040518586}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f86bbf4068faa5244abf2a29c119fc92, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -808,7 +842,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 8906447535069269117}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f86bbf4068faa5244abf2a29c119fc92, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

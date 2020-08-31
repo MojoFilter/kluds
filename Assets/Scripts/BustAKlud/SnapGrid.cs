@@ -22,7 +22,7 @@ public class SnapGrid : MonoBehaviour
             }
             for (float k = rowStart; k < rowWidth; ++k)
             {
-                Instantiate(slotPrefab, this.transform).transform.localScale = new Vector3(k, i);
+                Instantiate(slotPrefab, this.transform).transform.localPosition = new Vector3(k, -i);
             }
         }
     }

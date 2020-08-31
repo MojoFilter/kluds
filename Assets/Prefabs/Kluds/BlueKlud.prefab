@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6083869992442395165}
   - component: {fileID: 7936705716925690104}
   - component: {fileID: 2346497210702176828}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sector 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8452069505355050430}
   - component: {fileID: 5535717361490783700}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: KludHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2625899968392373693}
   - component: {fileID: 2986065583286928661}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Guide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 8292778150077729525}
   - component: {fileID: 7058633655131795181}
   - component: {fileID: 2868476951438936127}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sector 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 4473997534670553947}
   - component: {fileID: 6258596863507946300}
   - component: {fileID: 2967293398924725371}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sector 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 8051422220228863603}
   - component: {fileID: 8946597313258346532}
   - component: {fileID: 7768412257645085280}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BlueKlud
   m_TagString: Klud
   m_Icon: {fileID: 0}
@@ -479,8 +479,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kludRenderer: {fileID: 5535717361490783700}
   color: {r: 0.019607844, g: 0.10588236, b: 0.41960788, a: 1}
-  marker1Prefab: {fileID: 1390371653539532161, guid: 30fbe77707c081a49a3ed9b6a0a18f42, type: 3}
-  marker2Prefab: {fileID: 1991783721855554597, guid: 8203e8d9de27de945a11a3a6c7a68560, type: 3}
   gridLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -512,7 +510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8989017103018724601}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: KludCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -544,7 +542,7 @@ GameObject:
   - component: {fileID: 5681395060458876378}
   - component: {fileID: 6704585686502195973}
   - component: {fileID: 6857576582782674068}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sector 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -617,7 +615,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8646002180240773439}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sectors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -655,7 +653,7 @@ GameObject:
   - component: {fileID: 4814295063572421629}
   - component: {fileID: 210762017905754037}
   - component: {fileID: 7380243181784578570}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sector 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -729,7 +727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1851162345763429562}
   - component: {fileID: 8288864381011372830}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: KludExploder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -812,7 +810,7 @@ GameObject:
   - component: {fileID: 1500681196714967725}
   - component: {fileID: 6344163206003820362}
   - component: {fileID: 1083610063809960579}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sector 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

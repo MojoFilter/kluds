@@ -20,40 +20,11 @@ namespace Assets.Scripts.BustAKlud
             
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="klud"></param>
-        /// <param name="contactPoint">
-        ///   Relative to the klud center
-        /// </param>
-        public void Dock(GameObject klud)//, Vector2 contactPoint)
-        {
-            //var rads = Mathf.Atan2(contactPoint.y, contactPoint.x);
-            //Debug.Log($"Hit at {rads * Mathf.Rad2Deg}° {contactPoint}");
 
-            //var testPoints = new []
-            //{
-            //    (.5f, 0f),
-            //    (.5f, .5f),
-            //    (0f, .5f),
-            //    (-.5f, .5f),
-            //    (-.5f, 0f),
-            //    (-.5f, -.5f),
-            //    (0f, -.5f),
-            //    (.5f, -.5f)
-            //};
-            //var result = string.Join(Environment.NewLine, testPoints.Select(p => $"({p.Item1}, {p.Item2}) => {Mathf.Atan2(p.Item2, p.Item1) * Mathf.Rad2Deg}"));
-            //Debug.LogWarning(result);
-            //var kludBody = klud.GetComponent<Rigidbody2D>();
-            //kludBody.isKinematic = true;
-            //kludBody.velocity = Vector2.zero;
-            var boardPosition = GetClampedPosition(klud.transform.localPosition, this);
-            //var xOffset = IsShortRow((int)boardPosition.y) ? 0.5f : 0f;
-            //var dockedPosition = new Vector3(boardPosition.x + xOffset, boardPosition.y, 0);
-            //Debug.LogError($"({klud.transform.localPosition.x}, {klud.transform.localPosition.y}) => [{boardPosition.x}, {boardPosition.y}] ({dockedPosition.x}, {dockedPosition.y})");
-            //klud.transform.localPosition = dockedPosition;
-            var lostKluds = this.PopMatches((int)boardPosition.y, (int)boardPosition.x);
+        public void Dock(GameObject klud)
+        {
+            var boardPosition = klud.transform.localPosition;
+            var lostKluds = this.PopMatches((int)-boardPosition.y, (int)boardPosition.x);
             if (lostKluds.Any())
             {
                 this.DropUnmoored(lostKluds);
@@ -94,7 +65,6 @@ namespace Assets.Scripts.BustAKlud
                 //var body = orphan.GetComponent<Rigidbody2D>();
                 //body.isKinematic = false;
                 //body.gravityScale = 1f;
-                //body.AddForce(new Vector2(Random.Range(-10f, 10f), Random.Range(10f, 100f)));
                 //Destroy(orphan, 4f);
             }
         }
@@ -102,14 +72,11 @@ namespace Assets.Scripts.BustAKlud
 
         private static GameObject GetPiece(int line, int index, BustBoard board)
         {
+            var y = -line;
             float indexPosition = index + (IsShortRow(line) ? .5f : 0f);
-            return GetChildren(board.kludHolder.gameObject)
-                     .FirstOrDefault(k => k.transform.localPosition.y == line && k.transform.localPosition.x == indexPosition);
-                     
-            //Vector2 worldPoint = board.kludHolder.TransformPoint(line, indexPosition, 0);
-            //Debug.Log($"Testing position ({index}, {line}) => point ({worldPoint.x}, {worldPoint.y}");
-            //return Physics2D.OverlapPoint(worldPoint, board.kludLayer)?.gameObject;
-            
+            var pointA = board.kludHolder.transform.TransformPoint(new Vector2(indexPosition, y));
+            var pointB = board.kludHolder.transform.TransformPoint(new Vector2(indexPosition + 1f, y - 1f));
+            return Physics2D.OverlapArea(pointA, pointB, board.kludLayer)?.gameObject;
         }
 
         static IEnumerable<GameObject> GetChildren(GameObject obj)

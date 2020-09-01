@@ -691,6 +691,7 @@ MonoBehaviour:
   dropPeriodSeconds: 12
   crusher: {fileID: 166634933}
   board: {fileID: 1879825897}
+  provider: {fileID: 741853903}
 --- !u!4 &571174354
 Transform:
   m_ObjectHideFlags: 0

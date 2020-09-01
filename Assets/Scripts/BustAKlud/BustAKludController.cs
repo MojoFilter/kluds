@@ -1,5 +1,9 @@
 ﻿using Assets.Scripts.BustAKlud;
+using System;
 using System.Collections;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class BustAKludController : MonoBehaviour
@@ -15,17 +19,11 @@ public class BustAKludController : MonoBehaviour
 
     public BustBoard board;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //_board = new GameObject[columnCount, 32];
-        //this.StartCoroutine(this.DropPeriodically());
-    }
+    public KludProvider provider;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        //this.LoadLevel();
     }
 
     public void Dock(GameObject klud)
@@ -43,6 +41,41 @@ public class BustAKludController : MonoBehaviour
             {
                 this.crusher.Drop();
             }
+        }
+    }
+
+    private void LoadLevel()
+    {
+        var data = Resources.Load<TextAsset>("level01");
+        using (var reader = new StringReader(data.text))
+        {
+            //try
+            //{
+            var longColumns = int.Parse(reader.ReadLine());
+            var rows = int.Parse(reader.ReadLine());
+
+            this.board.longRowWidth = longColumns;
+            this.board.maxLines = rows;
+
+            var lineIndex = 0;
+            while (reader.ReadLine() is var line)
+            {
+                var pieces =
+                    line.Where(char.IsDigit)
+                        .Select((c, i) => (col: i, val: (int)char.GetNumericValue(c)))
+                        .Where(k => k.val > 0)
+                        .Select(k => (k.col, klud: provider.kludPrefabs[k.val - 1]));
+                foreach (var piece in pieces)
+                {
+                    this.board.PlaceKlud(lineIndex, piece.col, piece.klud);
+                }
+                lineIndex++;
+            }
+            //} 
+            //catch(Exception ex)
+            //{
+            //    Debug.LogError(ex);
+            //}
         }
     }
 }

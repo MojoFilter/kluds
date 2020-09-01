@@ -61,7 +61,15 @@ namespace Assets.Scripts.BustAKlud
             foreach (var orphan in orphaned)
             {
                 var klud = orphan.GetComponent<BustPiece>();
-                klud.SetMooring(false);
+                if (klud is BustPiece)
+                {
+                    klud.SetMooring(false);
+                }
+                else
+                {
+                    var component = orphan.gameObject.GetComponent<BustPiece>();
+                    Debug.LogError($"Somehow got a {orphan.name} in the orphans ... {component}");
+                }
                 //var body = orphan.GetComponent<Rigidbody2D>();
                 //body.isKinematic = false;
                 //body.gravityScale = 1f;
@@ -69,6 +77,14 @@ namespace Assets.Scripts.BustAKlud
             }
         }
 
+        public void PlaceKlud(int row, int col, GameObject kludPrefab)
+        {
+            var klud = Instantiate(kludPrefab, this.kludHolder);
+            var rowOffset = IsShortRow(row) ? 0.5f : 0f;
+            klud.transform.localPosition = new Vector3(col + rowOffset, (float)-row);
+            klud.GetComponent<Rigidbody2D>().isKinematic = true;
+            klud.GetComponent<BustPiece>().SnapToGrid();
+        }
 
         private static GameObject GetPiece(int line, int index, BustBoard board)
         {

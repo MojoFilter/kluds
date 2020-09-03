@@ -23,17 +23,23 @@ namespace Assets.Scripts.BustAKlud
 
         public void Dock(GameObject klud)
         {
-            var boardPosition = klud.transform.localPosition;
-            var lostKluds = this.PopMatches((int)-boardPosition.y, (int)boardPosition.x);
+            var boardPosition = RoundPosition(klud.transform.localPosition);
+            var lostKluds = this.PopMatches(boardPosition.x, boardPosition.y);
             if (lostKluds.Any())
             {
                 this.DropUnmoored(lostKluds);
             }
         }
 
-        private IEnumerable<GameObject> PopMatches(int row, int column)
+        private static (float x, float y) RoundPosition(Vector3 pos)
         {
-            var matches = CollectMatches(row, column, this);
+            float roundHalf(float v) => Mathf.Round(v * 2f) / 2f;
+            return (roundHalf(pos.x), roundHalf(pos.y));
+        }
+
+        private IEnumerable<GameObject> PopMatches(float x, float y)
+        {
+            var matches = CollectMatches(x, y, this);
             //Debug.Log($"Matched {matches.Count()}");
             if (matches.Count() > 2)
             {
@@ -86,12 +92,10 @@ namespace Assets.Scripts.BustAKlud
             klud.GetComponent<BustPiece>().SnapToGrid();
         }
 
-        private static GameObject GetPiece(int line, int index, BustBoard board)
+        private static GameObject GetPiece(float x, float y, BustBoard board)
         {
-            var y = -line;
-            float indexPosition = index + (IsShortRow(line) ? .5f : 0f);
-            var pointA = board.kludHolder.transform.TransformPoint(new Vector2(indexPosition, y));
-            var pointB = board.kludHolder.transform.TransformPoint(new Vector2(indexPosition + 1f, y - 1f));
+            var pointA = board.kludHolder.transform.TransformPoint(new Vector2(x, y));
+            var pointB = board.kludHolder.transform.TransformPoint(new Vector2(x + 1f, y - 1f));
             return Physics2D.OverlapArea(pointA, pointB, board.kludLayer)?.gameObject;
         }
 
@@ -103,15 +107,15 @@ namespace Assets.Scripts.BustAKlud
             }
         }
 
-        public static Vector3 GetClampedPosition(Vector3 position, BustBoard board)
-        {
-            var y = Mathf.Clamp(Mathf.RoundToInt(position.y), -(board.maxLines - 1), 0);
-            var shortLine = IsShortRow(y);
-            var pos = Mathf.FloorToInt(position.x + (shortLine ? 0 : 0.5f));
-            var x = Mathf.Clamp(pos, 0, shortLine ? 9 : 10);
+        //public static Vector3 GetClampedPosition(Vector3 position, BustBoard board)
+        //{
+        //    var y = Mathf.Clamp(Mathf.RoundToInt(position.y), -(board.maxLines - 1), 0);
+        //    var shortLine = IsShortRow(y);
+        //    var pos = Mathf.FloorToInt(position.x + (shortLine ? 0 : 0.5f));
+        //    var x = Mathf.Clamp(pos, 0, shortLine ? 9 : 10);
 
-            return new Vector3(x, y, 0);
-        }
+        //    return new Vector3(x, y, 0);
+        //}
 
         //public static Vector2Int GetLineAndPosition(Vector3 worldPosition, BustBoard board)
         //{
@@ -121,40 +125,40 @@ namespace Assets.Scripts.BustAKlud
 
         private static bool IsShortRow(int rowIndex) => Math.Abs(rowIndex) % 2 == 1;
 
-        private static readonly Vector2Int[] contactDirections = new[]
+        private static readonly Vector2[] contactDirections = new[]
         {
-            (-1, 1),
-            (0, 1),
-            (-1, 0),
-            (1, 0),
-            (-1, -1),
-            (0, -1)
-        }.Select(t => new Vector2Int(t.Item1, t.Item2)).ToArray();
+            (1f, 0f),  //right
+            (.5f, 1f), // top-right
+            (-.5f, 1f),// top-left
+            (-1f, 0f), // left
+            (-.5f, -1f),// bottom-left
+            (.5f, -1f) // bottom-right
+        }.Select(t => new Vector2(t.Item1, t.Item2)).ToArray();
 
-        private static readonly Vector2Int[] shortContactDirections = new[]
-        {
-            (-1, 1),
-            (0, 1),
-            (-1, 0),
-            (1, 0),
-            (-1, -1),
-            (0, -1)
-        }.Select(t => new Vector2Int(t.Item1, t.Item2)).ToArray();
+        //private static readonly Vector2Int[] shortContactDirections = new[]
+        //{
+        //    (-1, 1),
+        //    (0, 1),
+        //    (-1, 0),
+        //    (1, 0),
+        //    (-1, -1),
+        //    (0, -1)
+        //}.Select(t => new Vector2Int(t.Item1, t.Item2)).ToArray();
 
-        private static IEnumerable<GameObject> CollectMatches(int row, int col, BustBoard board)
+        private static IEnumerable<GameObject> CollectMatches(float x, float y, BustBoard board)
         {
-            var startKlud = GetPiece(row, col, board);
+            var startKlud = GetPiece(x, y, board);
             if (startKlud is null)
             {
-                Debug.LogError($"Start klud not found at ({row}, {col})");
+                Debug.LogError($"Start klud not found at ({x}, {y})");
             }
 
             var collected = new HashSet<GameObject>();
             if (startKlud.GetComponent<BustPiece>() is BustPiece piece)
             {
-                var kludSprite = piece.kludRenderer.sprite;
-                var position = new Vector2Int(col, row);
-                Collect(position, collected, new HashSet<Vector2Int>(), o => KludMatches(kludSprite, o), board);
+                var kludColor = piece.color;
+                var position = new Vector2(x, y);
+                Collect(position, collected, new HashSet<Vector2>(), o => KludMatches(kludColor, o), board);
             }
             return collected;
         }
@@ -162,25 +166,25 @@ namespace Assets.Scripts.BustAKlud
         private static HashSet<GameObject> CollectAnchored(BustBoard board, IEnumerable<GameObject> poppedKluds)
         {
             var collected = new HashSet<GameObject>();
-            var visited = new HashSet<Vector2Int>();
+            var visited = new HashSet<Vector2>();
             for (int i = 0; i < board.longRowWidth; ++i)
             {
-                Collect(new Vector2Int(i, 0), collected, visited, o => o != null && !poppedKluds.Contains(o), board);
+                Collect(new Vector2(i, 0), collected, visited, o => o != null && !poppedKluds.Contains(o), board);
             }
             return collected;
         }
 
-        private static void Collect(Vector2Int position, HashSet<GameObject> collected, HashSet<Vector2Int> visited, Predicate<GameObject> pred, BustBoard board)
+        private static void Collect(Vector2 position, HashSet<GameObject> collected, HashSet<Vector2> visited, Predicate<GameObject> pred, BustBoard board)
         {
             visited.Add(position);
-            var thisKlud = GetPiece(position.y, position.x, board);
+            var thisKlud = GetPiece(position.x, position.y, board);
             if (pred(thisKlud))
             {
                 collected.Add(thisKlud);
-                var directions = IsShortRow(position.y) ? shortContactDirections : contactDirections;
-                var newNeighbors = directions.Select(d => position + d)
-                                             .Where(n => !visited.Contains(n))
-                                             .ToArray();
+                var newNeighbors = contactDirections
+                    .Select(d => position + d)
+                    .Where(n => !visited.Contains(n))
+                    .ToArray();
 
                 foreach (var n in newNeighbors)
                 {
@@ -189,9 +193,14 @@ namespace Assets.Scripts.BustAKlud
             }
         }
 
-        private static bool KludMatches(Sprite sprite, GameObject klud)
-        {
-            return klud?.GetComponent<BustPiece>()?.kludRenderer.sprite?.Equals(sprite) == true;
+        private static bool KludMatches(Color kludColor, GameObject klud)
+        {            
+            var matches = klud?.GetComponent<BustPiece>()?.color == kludColor;
+            if (klud != null)
+            {
+                Debug.Log($"Match {klud?.name} ({klud?.transform.localPosition.x}, {klud?.transform.localPosition.y}) [{klud?.GetComponent<BustPiece>()?.color}] to {kludColor}: {matches}");
+            }
+            return matches;
         }
     }
 }

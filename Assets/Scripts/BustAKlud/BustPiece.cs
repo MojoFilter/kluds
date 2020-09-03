@@ -25,12 +25,14 @@ namespace Assets.Scripts.BustAKlud
         public void Pop()
         {
             this.GetComponent<Animator>().SetTrigger("Explode");
+            //this.kludRenderer.color = Color.magenta;
         }
 
         public void SetMooring(bool moored)
         {
             if (!moored)
             {
+                //this.kludRenderer.color = new Color(0xff, 0xff, 0xff, 0x88);
                 _unmoor = true;
                 this.GetComponent<Collider2D>().enabled = false;
                 Destroy(this, 4f);

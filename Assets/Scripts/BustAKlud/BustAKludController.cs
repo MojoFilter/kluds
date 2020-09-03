@@ -23,7 +23,7 @@ public class BustAKludController : MonoBehaviour
 
     private void Awake()
     {
-        //this.LoadLevel();
+        this.LoadLevel();
     }
 
     public void Dock(GameObject klud)
@@ -58,7 +58,7 @@ public class BustAKludController : MonoBehaviour
             this.board.maxLines = rows;
 
             var lineIndex = 0;
-            while (reader.ReadLine() is var line)
+            while (reader.ReadLine() is var line && !string.IsNullOrWhiteSpace(line))
             {
                 var pieces =
                     line.Where(char.IsDigit)

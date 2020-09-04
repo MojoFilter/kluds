@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 
 namespace Assets.Scripts.BustAKlud
 {
@@ -13,13 +11,16 @@ namespace Assets.Scripts.BustAKlud
 
         private bool _docked = false;
         private Rigidbody2D _body;
+        private Transform _kludCenter;
 
         private Vector2? _snap;
+        private bool _shouldSnap;
         private bool _unmoor;
 
         private void Awake()
         {
             _body = this.GetComponent<Rigidbody2D>();
+            _kludCenter = this.transform.Find("KludCenter");
         }
 
         public void Pop()
@@ -53,30 +54,30 @@ namespace Assets.Scripts.BustAKlud
 
         public void SnapToGrid()
         {
+            _shouldSnap = true;
             _docked = true;
-            var center = transform.Find("KludCenter");
-            var snap = Physics2D.OverlapPoint(center.transform.position, this.gridLayerMask);
-            if (snap != null)
-            {
-                _snap = snap.transform.position;
-            }
+            
         }
 
         private void FixedUpdate()
         {
-            if (_snap.HasValue)
+            if (_shouldSnap)
             {
-                _body.velocity = Vector2.zero;
-                _body.isKinematic = true;
-                _body.position = _snap.Value;
-                _snap = null;
+                var snap = Physics2D.OverlapPoint(_kludCenter.position, this.gridLayerMask);
+                if (snap != null)
+                {
+                    _shouldSnap = false;
+                    _body.velocity = Vector2.zero;
+                    _body.isKinematic = true;
+                    _body.position = snap.transform.position;
+                }
             }
             if (_unmoor)
             {
                 _unmoor = false;
                 _body.isKinematic = false;
-                _body.gravityScale = 1f;
-                _body.AddForce(new Vector2(Random.Range(-20f, 20f), Random.Range(10f, 500f)));
+                _body.gravityScale = Random.Range(0.75f, 1.75f);
+                //_body.AddForce(new Vector2(Random.Range(-20f, 20f), Random.Range(10f, 500f)));
             }
         }
     }

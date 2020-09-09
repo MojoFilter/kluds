@@ -60,6 +60,9 @@ public class KludCannon : MonoBehaviour
 
         var cursorPosition = this.controls.Bust.Point.ReadValue<Vector2>();
         var target = this.mainCamera.ScreenToWorldPoint(new Vector3(cursorPosition.x, cursorPosition.y, this.transform.position.z));
+        var localTarget = this.kludContainer.InverseTransformPoint(target);
+        localTarget += new Vector3(-.5f, .5f);
+        target = this.kludContainer.TransformPoint(localTarget);
         var difference = target - this.transform.position;
         var distance = difference.magnitude;
         Vector3 direction = difference / distance;

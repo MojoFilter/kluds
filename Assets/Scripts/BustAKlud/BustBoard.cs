@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,7 +36,9 @@ namespace Assets.Scripts.BustAKlud
         private static (float x, float y) RoundPosition(Vector3 pos)
         {
             float roundHalf(float v) => Mathf.Round(v * 2f) / 2f;
-            return (roundHalf(pos.x), roundHalf(pos.y));
+            var rounded = (roundHalf(pos.x), roundHalf(pos.y));
+            //Debug.Log($"Rounded {pos} to {rounded}");
+            return rounded;
         }
 
         private IEnumerable<GameObject> PopMatches(float x, float y)
@@ -94,9 +98,15 @@ namespace Assets.Scripts.BustAKlud
 
         private static GameObject GetPiece(float x, float y, BustBoard board)
         {
-            var pointA = board.kludHolder.transform.TransformPoint(new Vector2(x, y));
-            var pointB = board.kludHolder.transform.TransformPoint(new Vector2(x + 1f, y - 1f));
-            return Physics2D.OverlapArea(pointA, pointB, board.kludLayer)?.gameObject;
+            (x, y) = RoundPosition(new Vector3(x, y));
+            var pointA = board.kludHolder.transform.TransformPoint(new Vector2(x + .25f, y - .25f));
+            var pointB = board.kludHolder.transform.TransformPoint(new Vector2(x + .75f, y - .75f));
+            var hit = Physics2D.OverlapArea(pointA, pointB, board.kludLayer)?.gameObject;
+            if (hit != null)
+            {
+                Debug.LogError($"Hit {hit.transform.localPosition} from {(x, y)}");
+            }
+            return hit;
         }
 
         static IEnumerable<GameObject> GetChildren(GameObject obj)
@@ -106,23 +116,6 @@ namespace Assets.Scripts.BustAKlud
                 yield return obj.transform.GetChild(i).gameObject;
             }
         }
-
-        //public static Vector3 GetClampedPosition(Vector3 position, BustBoard board)
-        //{
-        //    var y = Mathf.Clamp(Mathf.RoundToInt(position.y), -(board.maxLines - 1), 0);
-        //    var shortLine = IsShortRow(y);
-        //    var pos = Mathf.FloorToInt(position.x + (shortLine ? 0 : 0.5f));
-        //    var x = Mathf.Clamp(pos, 0, shortLine ? 9 : 10);
-
-        //    return new Vector3(x, y, 0);
-        //}
-
-        //public static Vector2Int GetLineAndPosition(Vector3 worldPosition, BustBoard board)
-        //{
-        //    var pos = GetClampedPosition(worldPosition, board);
-        //    return new Vector2Int(Mathf.Abs((int)pos.x), Mathf.Clamp(Mathf.Abs(Mathf.FloorToInt(pos.y)), 0, board.maxLines - 1));
-        //}
-
         private static bool IsShortRow(int rowIndex) => Math.Abs(rowIndex) % 2 == 1;
 
         private static readonly Vector2[] contactDirections = new[]
@@ -135,15 +128,6 @@ namespace Assets.Scripts.BustAKlud
             (.5f, -1f) // bottom-right
         }.Select(t => new Vector2(t.Item1, t.Item2)).ToArray();
 
-        //private static readonly Vector2Int[] shortContactDirections = new[]
-        //{
-        //    (-1, 1),
-        //    (0, 1),
-        //    (-1, 0),
-        //    (1, 0),
-        //    (-1, -1),
-        //    (0, -1)
-        //}.Select(t => new Vector2Int(t.Item1, t.Item2)).ToArray();
 
         private static IEnumerable<GameObject> CollectMatches(float x, float y, BustBoard board)
         {
@@ -153,13 +137,15 @@ namespace Assets.Scripts.BustAKlud
                 Debug.LogError($"Start klud not found at ({x}, {y})");
             }
 
+            var log = new XDocument(new XElement("Matching"));
             var collected = new HashSet<GameObject>();
             if (startKlud.GetComponent<BustPiece>() is BustPiece piece)
             {
                 var kludColor = piece.color;
                 var position = new Vector2(x, y);
-                Collect(position, collected, new HashSet<Vector2>(), o => KludMatches(kludColor, o), board);
+                Collect(position, collected, new HashSet<Vector2>(), o => KludMatches(kludColor, o), board, log.Root, Color.red);
             }
+            //Debug.Log(log.ToString());
             return collected;
         }
 
@@ -169,17 +155,31 @@ namespace Assets.Scripts.BustAKlud
             var visited = new HashSet<Vector2>();
             for (int i = 0; i < board.longRowWidth; ++i)
             {
-                Collect(new Vector2(i, 0), collected, visited, o => o != null && !poppedKluds.Contains(o), board);
+                Collect(new Vector2(i, 0), collected, visited, o => o != null && !poppedKluds.Contains(o), board, new XElement("root"), Color.green);
             }
             return collected;
         }
 
-        private static void Collect(Vector2 position, HashSet<GameObject> collected, HashSet<Vector2> visited, Predicate<GameObject> pred, BustBoard board)
+        private static void Collect(
+            Vector2 position,
+            HashSet<GameObject> collected,
+            HashSet<Vector2> visited,
+            Predicate<GameObject> pred,
+            BustBoard board,
+            XElement logParent,
+            Color debugColor)
         {
             visited.Add(position);
-            var thisKlud = GetPiece(position.x, position.y, board);
-            if (pred(thisKlud))
+            //var thisKlud = GetPiece(position.x, position.y, board);
+            if (GetPiece(position.x, position.y, board) is GameObject thisKlud && pred(thisKlud))
             {
+                var logNode = new XElement(XmlConvert.EncodeName(thisKlud.name), 
+                    new XAttribute("id", thisKlud.GetInstanceID()),
+                    new XAttribute("pos", $"{RoundPosition(thisKlud.transform.localPosition)}"),
+                    new XAttribute("from", position),
+                    new XAttribute("actual", thisKlud.transform.localPosition));
+
+                logParent.Add(logNode);
                 collected.Add(thisKlud);
                 var newNeighbors = contactDirections
                     .Select(d => position + d)
@@ -188,7 +188,15 @@ namespace Assets.Scripts.BustAKlud
 
                 foreach (var n in newNeighbors)
                 {
-                    Collect(n, collected, visited, pred, board);
+                    var centerOffset = new Vector2(.5f, -.5f);
+                    var worldPosition = board.kludHolder.TransformPoint(position + centerOffset);
+                    var worldDir = board.kludHolder.TransformPoint(n + centerOffset) - worldPosition;
+
+                    var matchNode = new XElement("match", new XAttribute("n", n));
+                    logNode.Add(matchNode);
+
+                    Debug.DrawRay(worldPosition, worldDir, debugColor, 20f);
+                    Collect(n, collected, visited, pred, board, matchNode, debugColor);
                 }
             }
         }
@@ -196,10 +204,10 @@ namespace Assets.Scripts.BustAKlud
         private static bool KludMatches(Color kludColor, GameObject klud)
         {            
             var matches = klud?.GetComponent<BustPiece>()?.color == kludColor;
-            if (klud != null)
-            {
-                Debug.Log($"Match {klud?.name} ({klud?.transform.localPosition.x}, {klud?.transform.localPosition.y}) [{klud?.GetComponent<BustPiece>()?.color}] to {kludColor}: {matches}");
-            }
+            //if (klud != null)
+            //{
+            //    Debug.Log($"Match {klud?.name} ({klud?.transform.localPosition.x}, {klud?.transform.localPosition.y}) [{klud?.GetComponent<BustPiece>()?.color}] to {kludColor}: {matches}");
+            //}
             return matches;
         }
     }

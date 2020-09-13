@@ -21,9 +21,13 @@ public class KludCannon : MonoBehaviour
 
     public void OnKludLoaded(GameObject newKlud)
     {
-        if (newKlud.GetComponent<BustPiece>() is BustPiece piece)
+        if (newKlud?.GetComponent<BustPiece>() is BustPiece piece)
         {
             this.cannonSprite.color = piece.color;
+        }
+        else
+        {
+            this.cannonSprite.color = Color.black;
         }
     }
 

@@ -21,6 +21,8 @@ public class BustAKludController : MonoBehaviour
 
     public KludProvider provider;
 
+    public Rumbler rumbler;
+
     private void Awake()
     {
         this.LoadLevel();
@@ -29,6 +31,8 @@ public class BustAKludController : MonoBehaviour
     public void Dock(GameObject klud)
     {
         this.board.Dock(klud);
+        this.rumbler.Rumble();
+        this.provider.Reload();
     }
 
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
+//using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.BustAKlud
 {
@@ -33,11 +33,31 @@ namespace Assets.Scripts.BustAKlud
             }
         }
 
-        private static (float x, float y) RoundPosition(Vector3 pos)
+        public IEnumerable<Color> GetKludTypesInPlay()
         {
-            float roundHalf(float v) => Mathf.Round(v * 2f) / 2f;
-            var rounded = (roundHalf(pos.x), roundHalf(pos.y));
-            //Debug.Log($"Rounded {pos} to {rounded}");
+            return GetChildren(this.kludHolder.gameObject)
+                .Select(g => g.GetComponent<BustPiece>())
+                .Where(k => k is BustPiece)
+                .Select(k => k.color);
+        }
+
+        public static (float x, float y) RoundPosition(Vector3 pos)
+        {
+            //float roundHalf(float v) => Mathf.Round(v * 2f) / 2f;
+            var row = Mathf.Floor(pos.y);
+            var isShifted = IsShortRow((int)row);
+            float offset = isShifted ? .5f : 0f;
+            var col = Mathf.Floor(pos.x - offset) + offset;
+            var floored = new Vector2(col, row);
+            var rounded = contactDirections
+                .Concat(new[] { new Vector2(0f, 0f) })
+                .Select(dir => floored + dir)
+                .OrderBy(place => Vector2.Distance(pos, place))
+                .Select(p => (p.x, p.y))
+                .First();
+            
+            //var rounded = (roundHalf(pos.x), roundHalf(pos.y));
+            Debug.Log($"Rounded {pos} to {rounded}");
             return rounded;
         }
 
@@ -60,9 +80,9 @@ namespace Assets.Scripts.BustAKlud
         private void DropUnmoored(IEnumerable<GameObject> poppedKluds)
         {
             var anchored = CollectAnchored(this, poppedKluds);
-            var allChildren = GetChildren(this.kludHolder.gameObject);
+            var allChildren = GetChildren(this.kludHolder.gameObject).Select(p => p.gameObject);
             var orphaned = allChildren.Where(c => !anchored.Contains(c));
-            Debug.LogWarning($"Children: {allChildren.Count()}  Orphans: {orphaned.Count()}");
+            //Debug.LogWarning($"Children: {allChildren.Count()}  Orphans: {orphaned.Count()}");
             foreach (var stable in anchored)
             {
                 var klud = stable.GetComponent<BustPiece>();
@@ -70,14 +90,13 @@ namespace Assets.Scripts.BustAKlud
             }
             foreach (var orphan in orphaned)
             {
-                var klud = orphan.GetComponent<BustPiece>();
-                if (klud is BustPiece)
+                if (orphan.TryGetComponent(out BustPiece klud))
                 {
                     klud.SetMooring(false);
                 }
                 else
                 {
-                    var component = orphan.gameObject.GetComponent<BustPiece>();
+                    var component = string.Join(" / ", orphan.GetComponents<Component>().Select(c => c.GetType().Name));
                     Debug.LogError($"Somehow got a {orphan.name} in the orphans ... {component}");
                 }
                 //var body = orphan.GetComponent<Rigidbody2D>();
@@ -101,21 +120,19 @@ namespace Assets.Scripts.BustAKlud
             (x, y) = RoundPosition(new Vector3(x, y));
             var pointA = board.kludHolder.transform.TransformPoint(new Vector2(x + .25f, y - .25f));
             var pointB = board.kludHolder.transform.TransformPoint(new Vector2(x + .75f, y - .75f));
-            var hit = Physics2D.OverlapArea(pointA, pointB, board.kludLayer)?.gameObject;
-            if (hit != null)
-            {
-                Debug.LogError($"Hit {hit.transform.localPosition} from {(x, y)}");
-            }
-            return hit;
+            return Physics2D.OverlapArea(pointA, pointB, board.kludLayer)?.gameObject;
         }
 
-        static IEnumerable<GameObject> GetChildren(GameObject obj)
+        static IEnumerable<BustPiece> GetChildren(GameObject obj)
         {
-            for (int i = 0; i < obj.transform.childCount; ++i)
-            {
-                yield return obj.transform.GetChild(i).gameObject;
-            }
+            return obj.transform.GetComponentsInChildren<BustPiece>();
+            //for (int i = 0; i < obj.transform.childCount; ++i)
+            //{
+            //    yield return obj.transform.GetChild(i).gameObject;
+            //}
         }
+
+
         private static bool IsShortRow(int rowIndex) => Math.Abs(rowIndex) % 2 == 1;
 
         private static readonly Vector2[] contactDirections = new[]

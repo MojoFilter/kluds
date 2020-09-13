@@ -8,9 +8,12 @@ public class NextKludPreview : MonoBehaviour
         {
             Destroy(this.transform.GetChild(0).gameObject);
         }
-        var previewKlud = Instantiate(kludPrefab);
-        previewKlud.transform.SetParent(this.transform);
-        previewKlud.transform.localPosition = Vector3.zero;
-        previewKlud.transform.localScale = Vector3.one;
+        if (kludPrefab != null)
+        {
+            var previewKlud = Instantiate(kludPrefab);
+            previewKlud.transform.SetParent(this.transform);
+            previewKlud.transform.localPosition = Vector3.zero;
+            previewKlud.transform.localScale = Vector3.one;
+        }
     }
 }

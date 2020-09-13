@@ -105,6 +105,74 @@ public class @KludControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""KludderBros"",
+            ""id"": ""67a92c36-7617-422b-b107-721f5033e2a7"",
+            ""actions"": [
+                {
+                    ""name"": ""Harry X"",
+                    ""type"": ""Value"",
+                    ""id"": ""3e373eda-8beb-47b7-9891-4d1cc6d13dcf"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""136a4667-0106-41f4-b4de-0aad62f2f1ae"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""cad8ccd2-0fe3-4cad-8b20-5ed72abdf165"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Harry X"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ff40189-3f27-44ed-8f1e-fc33dc9a7f30"",
+                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Harry X"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""12528cb3-9832-433b-b336-186ac262ee9e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""160865ab-bf3c-4db3-9321-bade38d83c11"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -117,6 +185,10 @@ public class @KludControls : IInputActionCollection, IDisposable
         m_Test = asset.FindActionMap("Test", throwIfNotFound: true);
         m_Test_Position = m_Test.FindAction("Position", throwIfNotFound: true);
         m_Test_Drag = m_Test.FindAction("Drag", throwIfNotFound: true);
+        // KludderBros
+        m_KludderBros = asset.FindActionMap("KludderBros", throwIfNotFound: true);
+        m_KludderBros_HarryX = m_KludderBros.FindAction("Harry X", throwIfNotFound: true);
+        m_KludderBros_Fire = m_KludderBros.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -244,6 +316,47 @@ public class @KludControls : IInputActionCollection, IDisposable
         }
     }
     public TestActions @Test => new TestActions(this);
+
+    // KludderBros
+    private readonly InputActionMap m_KludderBros;
+    private IKludderBrosActions m_KludderBrosActionsCallbackInterface;
+    private readonly InputAction m_KludderBros_HarryX;
+    private readonly InputAction m_KludderBros_Fire;
+    public struct KludderBrosActions
+    {
+        private @KludControls m_Wrapper;
+        public KludderBrosActions(@KludControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @HarryX => m_Wrapper.m_KludderBros_HarryX;
+        public InputAction @Fire => m_Wrapper.m_KludderBros_Fire;
+        public InputActionMap Get() { return m_Wrapper.m_KludderBros; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(KludderBrosActions set) { return set.Get(); }
+        public void SetCallbacks(IKludderBrosActions instance)
+        {
+            if (m_Wrapper.m_KludderBrosActionsCallbackInterface != null)
+            {
+                @HarryX.started -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnHarryX;
+                @HarryX.performed -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnHarryX;
+                @HarryX.canceled -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnHarryX;
+                @Fire.started -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnFire;
+            }
+            m_Wrapper.m_KludderBrosActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @HarryX.started += instance.OnHarryX;
+                @HarryX.performed += instance.OnHarryX;
+                @HarryX.canceled += instance.OnHarryX;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+            }
+        }
+    }
+    public KludderBrosActions @KludderBros => new KludderBrosActions(this);
     public interface IBustActions
     {
         void OnFire(InputAction.CallbackContext context);
@@ -253,5 +366,10 @@ public class @KludControls : IInputActionCollection, IDisposable
     {
         void OnPosition(InputAction.CallbackContext context);
         void OnDrag(InputAction.CallbackContext context);
+    }
+    public interface IKludderBrosActions
+    {
+        void OnHarryX(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }

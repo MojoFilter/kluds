@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.BustAKlud
@@ -46,6 +47,7 @@ namespace Assets.Scripts.BustAKlud
         {
             if (!_docked && _stoppers.Contains(collision.gameObject.tag))
             {
+                //collision.contacts.First().
                 this.SnapToGrid();
                 FindObjectOfType<BustAKludController>().Dock(this.gameObject);
             }

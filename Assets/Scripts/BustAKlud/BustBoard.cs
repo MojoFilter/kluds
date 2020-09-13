@@ -25,7 +25,9 @@ namespace Assets.Scripts.BustAKlud
 
         public void Dock(GameObject klud)
         {
-            var boardPosition = RoundPosition(klud.transform.localPosition);
+            var originalPosition = klud.transform.localPosition;
+            var boardPosition = RoundPosition(originalPosition);
+            Debug.Log($"Dock: {originalPosition} => {boardPosition}");
             var lostKluds = this.PopMatches(boardPosition.x, boardPosition.y);
             if (lostKluds.Any())
             {
@@ -49,7 +51,7 @@ namespace Assets.Scripts.BustAKlud
             float offset = isShifted ? .5f : 0f;
             var col = Mathf.Floor(pos.x - offset) + offset;
             var floored = new Vector2(col, row);
-            var rounded = contactDirections
+            return contactDirections
                 .Concat(new[] { new Vector2(0f, 0f) })
                 .Select(dir => floored + dir)
                 .OrderBy(place => Vector2.Distance(pos, place))
@@ -57,8 +59,8 @@ namespace Assets.Scripts.BustAKlud
                 .First();
             
             //var rounded = (roundHalf(pos.x), roundHalf(pos.y));
-            Debug.Log($"Rounded {pos} to {rounded}");
-            return rounded;
+            //Debug.Log($"Rounded {pos} to {rounded}");
+            //return rounded;
         }
 
         private IEnumerable<GameObject> PopMatches(float x, float y)

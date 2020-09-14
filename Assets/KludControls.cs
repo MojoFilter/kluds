@@ -125,6 +125,14 @@ public class @KludControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Start"",
+                    ""type"": ""Button"",
+                    ""id"": ""75969a4e-1f96-4328-a85d-1730b38cd2e0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -171,6 +179,17 @@ public class @KludControls : IInputActionCollection, IDisposable
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1d8a2f64-b4c5-4149-8051-cd77ada40943"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Start"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -189,6 +208,7 @@ public class @KludControls : IInputActionCollection, IDisposable
         m_KludderBros = asset.FindActionMap("KludderBros", throwIfNotFound: true);
         m_KludderBros_HarryX = m_KludderBros.FindAction("Harry X", throwIfNotFound: true);
         m_KludderBros_Fire = m_KludderBros.FindAction("Fire", throwIfNotFound: true);
+        m_KludderBros_Start = m_KludderBros.FindAction("Start", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -322,12 +342,14 @@ public class @KludControls : IInputActionCollection, IDisposable
     private IKludderBrosActions m_KludderBrosActionsCallbackInterface;
     private readonly InputAction m_KludderBros_HarryX;
     private readonly InputAction m_KludderBros_Fire;
+    private readonly InputAction m_KludderBros_Start;
     public struct KludderBrosActions
     {
         private @KludControls m_Wrapper;
         public KludderBrosActions(@KludControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @HarryX => m_Wrapper.m_KludderBros_HarryX;
         public InputAction @Fire => m_Wrapper.m_KludderBros_Fire;
+        public InputAction @Start => m_Wrapper.m_KludderBros_Start;
         public InputActionMap Get() { return m_Wrapper.m_KludderBros; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -343,6 +365,9 @@ public class @KludControls : IInputActionCollection, IDisposable
                 @Fire.started -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnFire;
                 @Fire.performed -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnFire;
                 @Fire.canceled -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnFire;
+                @Start.started -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnStart;
+                @Start.performed -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnStart;
+                @Start.canceled -= m_Wrapper.m_KludderBrosActionsCallbackInterface.OnStart;
             }
             m_Wrapper.m_KludderBrosActionsCallbackInterface = instance;
             if (instance != null)
@@ -353,6 +378,9 @@ public class @KludControls : IInputActionCollection, IDisposable
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
+                @Start.started += instance.OnStart;
+                @Start.performed += instance.OnStart;
+                @Start.canceled += instance.OnStart;
             }
         }
     }
@@ -371,5 +399,6 @@ public class @KludControls : IInputActionCollection, IDisposable
     {
         void OnHarryX(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnStart(InputAction.CallbackContext context);
     }
 }

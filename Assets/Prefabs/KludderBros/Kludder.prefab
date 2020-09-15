@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fdd19246688ea14591b11d42b8bf494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumScale: 0.4
+  minimumScale: 0.3
   kludderPrefab: {fileID: 8572089261961171409}
   kludderSprites:
   - {fileID: 21300000, guid: bc177ce20c3f87147810ff94fcb3ae73, type: 3}

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Kludder : MonoBehaviour
 {
-	public float minimumScale = 0.5f;
+	public float minimumScale = 0.3f;
 	public GameObject kludderPrefab;
 	public List<Sprite> kludderSprites = new List<Sprite>();
 	public Vector2 startForce = new Vector2(2f, 5f);
@@ -28,6 +28,10 @@ public class Kludder : MonoBehaviour
 			ball1.GetComponent<Kludder>().startForce = new Vector2(2f, 5f);
 			ball2.GetComponent<Kludder>().startForce = new Vector2(-2f, 5f);
 		}
+		else
+        {
+			Debug.LogError($"Ended at scale {this.transform.localScale.x} => {nextScale} / {minimumScale}");
+        }
 		Destroy(this.gameObject);
 	}
 

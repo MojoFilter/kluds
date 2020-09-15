@@ -63,7 +63,7 @@ public class HarryController : MonoBehaviour
             var chain = Instantiate(kludderChainPrefab);
             chain.transform.SetParent(this.board);
             chain.transform.position = new Vector3(this.transform.position.x, chain.transform.position.y, 0f);
-            chain.transform.localScale = new Vector3(1f, 0f, 1f);
+            //chain.transform.localScale = new Vector3(1f, 0f, 1f);
             chain.GetComponent<KludderChain>().chainDestroyed.AddListener(new UnityAction(this.OnChainDestroyed));
             _isFiring = true;
         }

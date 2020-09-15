@@ -8,6 +8,7 @@ TagManager:
   - Crusher
   - Klud
   - Roof
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -20,9 +21,9 @@ TagManager:
   - Grid
   - Kluds
   - Kludders
-  - 
-  - 
-  - 
+  - Harry
+  - Chain
+  - Floor
   - 
   - 
   - 

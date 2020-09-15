@@ -13,16 +13,16 @@ public class KludderChain : MonoBehaviour
 
     public float speed = 4f;
 
-    private float _length = 0;
+   //private float _length = 0;
 
     private void Update()
     {
-        _length += this.speed * Time.deltaTime;
+        //_length += this.speed * Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
-        this.transform.localScale = new Vector3(1f, _length);
+        this.transform.localPosition += Vector3.up * this.speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
